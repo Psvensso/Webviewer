@@ -207,17 +207,10 @@ export const _useApp = (p: { channelId: string } = { channelId: "lobby" }) => {
     }
 
     return () => {
+      console.log("Unmounting");
       channel?.unsubscribe();
     };
-  }, [
-    channelId,
-    userId,
-    answerCall,
-    peerConnection,
-    addIceCandidate,
-    startCall,
-    iceCandidatesQueue,
-  ]);
+  }, []);
 
   useEffect(() => {
     channelRef.current?.track({ userId });
