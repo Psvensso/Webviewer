@@ -37,8 +37,13 @@ jobs:
           cache: "npm"
       - name: Install dependencies
         run: npm install && npm install @rollup/rollup-linux-x64-gnu
+
       - name: Build
         run: npm run build
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+          VITE_SUPABASE_API_ANON_PUBLIC_KEY: ${{ secrets.VITE_SUPABASE_API_ANON_PUBLIC_KEY }}
+          VITE_SUPABASE_APP_URL: ${{ secrets.VITE_SUPABASE_APP_URL }}
       - name: Setup Pages
         uses: actions/configure-pages@v3
       - name: Upload artifact
