@@ -65,7 +65,7 @@ export const _useApp = (p: { channelId: string } = { channelId: "lobby" }) => {
     };
 
     pc.ontrack = (event) => {
-      console.log("Got remote track:", event.streams[0]);
+      console.log("Got remote track:", event.streams);
       setRemoteStream(event.streams[0]);
     };
 
@@ -138,15 +138,16 @@ export const _useApp = (p: { channelId: string } = { channelId: "lobby" }) => {
         window.location.reload();
       })
       .on("broadcast", { event: "answer" }, async (e) => {
-        console.log("recieved answer");
+        console.log("Recieved answer");
         if (e.payload) {
-          console.log("setting remote description");
+          console.log("Setting remote description");
           peerConnection?.setRemoteDescription(
             new RTCSessionDescription(e.payload)
           );
 
           try {
             for (const candidate of iceCandidatesQueue) {
+              console.log("Adding ice candidate from qeueu");
               if (peerConnection) {
                 await peerConnection.addIceCandidate(candidate);
               }
