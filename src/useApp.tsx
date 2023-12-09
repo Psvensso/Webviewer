@@ -131,6 +131,7 @@ export const _useApp = (p: { channelId: string } = { channelId: "lobby" }) => {
       .on("broadcast", { event: "joinRoom" }, console.log)
       // Handle ICE candidates from the other peer
       .on("broadcast", { event: "newIce" }, (e) => {
+        console.log("Recieved new ICE candidate");
         e.payload && addIceCandidate(new RTCIceCandidate(e.payload));
       })
       .on("broadcast", { event: "refresh" }, () => {
