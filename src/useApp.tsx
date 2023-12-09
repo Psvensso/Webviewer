@@ -128,7 +128,7 @@ export const _useApp = (p: { channelId: string } = { channelId: "lobby" }) => {
           },
         },
       })
-      .on("broadcast", { event: "enter" }, console.log)
+      .on("broadcast", { event: "joinRoom" }, console.log)
       // Handle ICE candidates from the other peer
       .on("broadcast", { event: "newIce" }, (e) => {
         e.payload && addIceCandidate(new RTCIceCandidate(e.payload));
@@ -183,11 +183,13 @@ export const _useApp = (p: { channelId: string } = { channelId: "lobby" }) => {
     if (channel.state === "closed") {
       channel.subscribe((status) => {
         if (status === "SUBSCRIBED") {
-          channel?.send({
-            type: "broadcast",
-            event: "enter",
-            payload: { userId },
-          });
+          setTimeout(() => {
+            channel?.send({
+              type: "broadcast",
+              event: "joinRoom",
+              payload: { userId },
+            });
+          }, 1000);
           channelRef.current = channel;
 
           window.onbeforeunload = () => {
@@ -198,21 +200,22 @@ export const _useApp = (p: { channelId: string } = { channelId: "lobby" }) => {
             });
             return null;
           };
-        } else {
-          //window.location.reload();
         }
       });
     }
 
     return () => {
-      channel?.send({
-        type: "broadcast",
-        event: "leave",
-        payload: { userId },
-      });
       channel?.unsubscribe();
     };
-  }, [channelId, userId, answerCall, peerConnection]);
+  }, [
+    channelId,
+    userId,
+    answerCall,
+    peerConnection,
+    addIceCandidate,
+    startCall,
+    iceCandidatesQueue,
+  ]);
 
   useEffect(() => {
     channelRef.current?.track({ userId });

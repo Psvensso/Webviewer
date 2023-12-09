@@ -8,8 +8,7 @@ import { supabase } from "./lib/supabaseClient.ts";
 function AppApp() {
   const [authenticated, setIsAuthenticated] = useState(false);
   useEffect(() => {
-    supabase.auth.onAuthStateChange((event, session) => {
-      console.log(event, session);
+    supabase.auth.onAuthStateChange((_, session) => {
       setIsAuthenticated(!!session?.user);
     });
   }, []);
