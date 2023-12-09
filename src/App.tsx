@@ -1,35 +1,58 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { LocalVideo } from "./components/LocalVideo";
+import { RemoteVideo } from "./components/RemoteVideo";
+import { AppProvider, _useApp } from "./useApp";
 
-function App() {
-  const [count, setCount] = useState(0)
-
+export const App = () => {
+  const ctx = _useApp();
+  const { startCall, channelRef } = ctx;
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
+    <AppProvider value={ctx}>
+      <div style={{ display: "flex", flexDirection: "column" }}>
+        <h3>{ctx.userId}</h3>
+        <LocalVideo />
+        <RemoteVideo />
+        <button
+          onClick={async () => {
+            const callOffer = await startCall();
+            channelRef.current?.send({
+              type: "broadcast",
+              event: "call",
+              payload: callOffer,
+            });
+          }}
+        >
+          Call
         </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
+        <button
+          onClick={async () => {
+            const callOffer = await startCall();
+            channelRef.current?.send({
+              type: "broadcast",
+              event: "call_me",
+              payload: callOffer,
+            });
+          }}
+        >
+          You call me
+        </button>
+        <button
+          onClick={async () => {
+            const callOffer = await startCall();
+            channelRef.current?.send({
+              type: "broadcast",
+              event: "refresh",
+              payload: callOffer,
+            });
+            setTimeout(() => {
+              window.location.reload();
+            }, 100);
+          }}
+        >
+          Refresh
+        </button>
       </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
+    </AppProvider>
+  );
+};
 
-export default App
+//App.whyDidYouRender = true;

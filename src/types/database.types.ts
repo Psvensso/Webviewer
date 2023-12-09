@@ -9,7 +9,30 @@ export type Json =
 export interface Database {
   public: {
     Tables: {
-      [_ in never]: never
+      rooms: {
+        Row: {
+          answers: Json[] | null
+          callOffer: Json | null
+          created_at: string
+          iceCandidates: Json[] | null
+          id: string
+        }
+        Insert: {
+          answers?: Json[] | null
+          callOffer?: Json | null
+          created_at?: string
+          iceCandidates?: Json[] | null
+          id?: string
+        }
+        Update: {
+          answers?: Json[] | null
+          callOffer?: Json | null
+          created_at?: string
+          iceCandidates?: Json[] | null
+          id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

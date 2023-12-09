@@ -1,7 +1,15 @@
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
+import basicSsl from "@vitejs/plugin-basic-ssl";
+import react from "@vitejs/plugin-react";
+import { defineConfig } from "vite";
 
-// https://vitejs.dev/config/
-export default defineConfig({
-  plugins: [react()],
-})
+export default defineConfig(() => {
+  return {
+    base: "/Webviewer/",
+    plugins: [basicSsl(), react()],
+    server: {
+      https: true,
+      host: true,
+      port: 3000,
+    },
+  };
+});

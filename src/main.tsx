@@ -1,10 +1,22 @@
-import React from 'react'
-import ReactDOM from 'react-dom/client'
-import App from './App.tsx'
-import './index.css'
+import { useEffect, useState } from "react";
+import ReactDOM from "react-dom/client";
+import { App } from "./App.tsx";
+import { SignInForm } from "./components/SignInForm.tsx";
+import "./index.css";
+import { supabase } from "./lib/supabaseClient.ts";
 
-ReactDOM.createRoot(document.getElementById('root')!).render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
-)
+function AppApp() {
+  const [authenticated, setIsAuthenticated] = useState(false);
+  useEffect(() => {
+    supabase.auth.onAuthStateChange((event, session) => {
+      console.log(event, session);
+      setIsAuthenticated(!!session?.user);
+    });
+  }, []);
+  if (!authenticated) {
+    return <SignInForm></SignInForm>;
+  }
+
+  return <App />;
+}
+ReactDOM.createRoot(document.getElementById("root")!).render(<AppApp />);
